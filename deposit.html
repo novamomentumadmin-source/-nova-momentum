@@ -41,7 +41,7 @@
 
       <div class="dash-card" style="max-width:560px;">
         <h3>Complete Your Subscription Deposit</h3>
-        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">Select a plan, choose a payment method, and submit your deposit. All deposits are manually reviewed and approved by our team.</p>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">Select a plan, choose a payment method, and submit your deposit. All deposits are reviewed and approved by our team.</p>
         
         <div id="errorMsg" class="error-msg"></div>
         <div id="successMsg" class="success-msg"></div>
@@ -203,7 +203,7 @@
           err.style.display = 'block';
           return;
         }
-        success.textContent = 'Deposit submitted successfully. It is now pending manual approval by our team.';
+        success.textContent = 'Deposit submitted successfully. It is now pending approval by our team.';
         success.style.display = 'block';
         e.target.reset();
         document.getElementById('amountDisplay').textContent = '$0.00';
