@@ -673,7 +673,13 @@ h1, h2, h3, h4 {
   font-size: 0.95rem;
   transition: var(--transition);
 }
-
+.form-group select {
+  color-scheme: dark;
+}
+.form-group select option {
+  background: #111111;
+  color: #f3e6c4;
+}
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
