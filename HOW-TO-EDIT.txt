@@ -1,0 +1,12 @@
+Easy edits after hosting
+
+Wallet: Admin, Wallet
+Client balance: Admin, Users, Edit
+Revenue report: Admin, Reports
+Welcome email wording: Admin, Welcome Email
+Activity: Admin, Activity Log
+Plans and prices: plans.html and PLANS in server.js
+Live chat: paste Tawk.to where it says TAWK.TO LIVE CHAT
+Welcome emails send after host adds SMTP_HOST, SMTP_USER, SMTP_PASS
+Admin login: nm-admin-secure-login.html
+Come back here anytime with a screenshot if you want a change made.

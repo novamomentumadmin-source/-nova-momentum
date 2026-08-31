@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Payout | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar" id="sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a href='/dashboard'><span class="nav-icon">▣</span> Overview</a></li>
+        <li><a href='/deposit'><span class="nav-icon">↓</span> Deposit / Subscribe</a></li>
+        <li><a class='active' href='/withdraw'><span class="nav-icon">↑</span> Request Payout</a></li>
+        <li><a href='/transactions'><span class="nav-icon">≡</span> Transactions</a></li>
+        <li><a href='/plans'><span class="nav-icon">★</span> Plans</a></li>
+        <li><a href="#" id="logoutBtn"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Request Payout</h1>
+        <div class="dash-user"><span id="userName">—</span></div>
+      </div>
+
+      <div class="stats-grid" style="max-width:480px;">
+        <div class="stat-card">
+          <div class="label">Available to Withdraw</div>
+          <div class="value gold" id="available">$0.00</div>
+        </div>
+      </div>
+
+      <div class="dash-card" style="max-width:560px;">
+        <h3>Submit Payout Request</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">Where an eligible balance is available under your agreement, you may request a payout. All requests are manually reviewed.</p>
+        
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
+
+        <form id="withdrawForm">
+          <div class="form-group">
+            <label for="amount">Amount (USD)</label>
+            <input type="number" id="amount" name="amount" required min="1" step="0.01" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label for="method">Payout Method</label>
+            <select id="method" name="method" required>
+              <option value="USDT" selected>USDT (Tether)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="details">Your USDT Wallet Address</label>
+            <textarea id="details" name="details" required rows="3" placeholder="Paste your USDT (TRC20 or ERC20) wallet address"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Submit Payout Request</button>
+        </form>
+      </div>
+
+      <div class="dash-card">
+        <h3>Payout History</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable">
+              <tr><td colspan="4" style="text-align:center;color:var(--text-muted);">No payout requests yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = requireAuth();
+      if (!session) return;
+      if (session.role === 'admin') { window.location.href = 'admin.html'; return; }
+
+      const user = (await getMe()) || session;
+      document.getElementById('userName').textContent = user.fullName || session.fullName;
+      document.getElementById('available').textContent = formatCurrency(user.balance || 0);
+
+      async function loadHistory() {
+        const list = (await getWithdrawals()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const tbody = document.getElementById('historyTable');
+        if (!list.length) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);">No payout requests yet</td></tr>';
+          return;
+        }
+        tbody.innerHTML = list.map(w => `
+          <tr>
+            <td>${formatDate(w.createdAt)}</td>
+            <td>${formatCurrency(w.amount)}</td>
+            <td>${w.method}</td>
+            <td><span class="status-badge status-${w.status}">${w.status}</span></td>
+          </tr>
+        `).join('');
+      }
+      await loadHistory();
+
+      document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amount = parseFloat(document.getElementById('amount').value);
+        const method = document.getElementById('method').value;
+        const details = document.getElementById('details').value;
+        const err = document.getElementById('errorMsg');
+        const success = document.getElementById('successMsg');
+        err.style.display = 'none';
+        success.style.display = 'none';
+
+        const result = await submitWithdrawal(session.id, amount, method, details);
+        if (result.success) {
+          success.textContent = 'Payout request submitted. It is pending manual approval.';
+          success.style.display = 'block';
+          e.target.reset();
+          // Refresh balance
+          const u = (await getMe()) || session;
+          document.getElementById('available').textContent = formatCurrency(u.balance || 0);
+          await loadHistory();
+        } else {
+          err.textContent = result.message;
+          err.style.display = 'block';
+        }
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSession();
+        window.location.href = 'login.html';
+      });
+    });
+  </script>
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

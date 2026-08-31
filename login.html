@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="40">
+      </a>
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Log in to your Nova Momentum account</p>
+      
+      <div id="errorMsg" class="error-msg"></div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div style="text-align:right;margin-bottom:1.25rem;">
+          <a href='/forgot-password' style='font-size:0.85rem;'>Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+      
+      <div class="auth-links">
+        Don’t have an account? <a href='/signup'>Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initStorage === 'function') initStorage();
+      const session = getSession();
+      if (session) {
+        window.location.href = session.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        return;
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const err = document.getElementById('errorMsg');
+        const result = await handleLogin(email, password);
+        if (result.success) {
+          window.location.href = 'dashboard.html';
+        } else {
+          err.textContent = result.message || 'Login failed.';
+          err.style.display = 'block';
+        }
+      });
+    });
+  </script>
+
+  <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

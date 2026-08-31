@@ -1,0 +1,3 @@
+Host this Node site. npm install then npm start. Needs a Postgres database.
+Connect the domain. Send back the live link and all logins.
+Do not add a wallet address.

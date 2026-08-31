@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a href='/dashboard'><span class="nav-icon">▣</span> Overview</a></li>
+        <li><a href='/deposit'><span class="nav-icon">↓</span> Deposit / Subscribe</a></li>
+        <li><a href='/withdraw'><span class="nav-icon">↑</span> Request Payout</a></li>
+        <li><a class='active' href='/transactions'><span class="nav-icon">≡</span> Transactions</a></li>
+        <li><a href='/plans'><span class="nav-icon">★</span> Plans</a></li>
+        <li><a href="#" id="logoutBtn"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Transactions</h1>
+        <div class="dash-user"><span id="userName">—</span></div>
+      </div>
+      <div class="dash-card">
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="txTable">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = requireAuth();
+      if (!session) return;
+      if (session.role === 'admin') { window.location.href = 'admin.html'; return; }
+      document.getElementById('userName').textContent = session.fullName;
+
+      const deposits = (await getDeposits()).filter(d => d.userId === session.id);
+      const withdrawals = getWithdrawals().filter(w => w.userId === session.id);
+      let rows = [];
+      deposits.forEach(d => rows.push({ date: d.createdAt, type: 'Deposit', desc: `${PLANS[d.planId]?.name || ''} via ${d.method}`, amount: d.amount, status: d.status }));
+      withdrawals.forEach(w => rows.push({ date: w.createdAt, type: 'Payout', desc: w.method, amount: -w.amount, status: w.status }));
+      rows.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      const tbody = document.getElementById('txTable');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No transactions yet</td></tr>';
+      } else {
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${formatDate(r.date)}</td>
+            <td>${r.type}</td>
+            <td>${r.desc}</td>
+            <td>${r.amount >= 0 ? '+' : ''}${formatCurrency(r.amount)}</td>
+            <td><span class="status-badge status-${r.status}">${r.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); clearSession(); window.location.href = 'login.html'; });
+    });
+  </script>
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

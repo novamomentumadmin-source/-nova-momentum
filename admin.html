@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a class='active' href='/admin'><span class="nav-icon">▣</span> Admin Overview</a></li>
+        <li><a href="#deposits"><span class="nav-icon">↓</span> Deposits</a></li>
+        <li><a href="#withdrawals"><span class="nav-icon">↑</span> Withdrawals</a></li>
+        <li><a href="#users"><span class="nav-icon">👤</span> Users</a></li>
+        <li><a href="#welcome"><span class="nav-icon">✉</span> Welcome Email</a></li>
+        <li><a href="#reports"><span class="nav-icon">$</span> Reports</a></li>
+        <li><a href="#wallet"><span class="nav-icon">◇</span> Wallet</a></li>
+        <li><a href="#activity"><span class="nav-icon">≡</span> Activity Log</a></li>
+        <li><a href='/'><span class="nav-icon">⌂</span> Site Home</a></li>
+        <li><a href="#" id="logoutBtn" style="color:#e74c3c;"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    
+    <main class="dash-main">
+      <div class="dash-header">
+        <div>
+          <button class="btn btn-ghost btn-sm mobile-toggle" style="margin-bottom:0.5rem;" onclick="document.querySelector('.dash-sidebar').classList.toggle('open')">☰ Menu</button>
+          <h1>Admin Panel</h1>
+        </div>
+        <div class="dash-user" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+          <span>Administrator</span>
+          <span class="status-badge status-active">Admin</span>
+          <button type="button" id="logoutBtnTop" class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;">Log Out</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">Total Users</div>
+          <div class="value" id="statUsers">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Pending Deposits</div>
+          <div class="value gold" id="statPendingDep">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Pending Withdrawals</div>
+          <div class="value" id="statPendingWd">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Deposits (Approved)</div>
+          <div class="value gold" id="statTotalDep">$0</div>
+        </div>
+      </div>
+
+      <!-- Deposits -->
+      <div class="dash-card" id="deposits">
+        <h3>Pending Deposits — Approve / Reject</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Plan</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Reference</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="depTable">
+              <tr><td colspan="7" style="text-align:center;color:var(--text-muted);">No pending deposits</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Withdrawals -->
+      <div class="dash-card" id="withdrawals">
+        <h3>Pending Withdrawals — Approve / Reject</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Details</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="wdTable">
+              <tr><td colspan="10" style="text-align:center;color:var(--text-muted);">No pending withdrawals</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div class="dash-card" id="users">
+        <h3>Registered Users <button type="button" class="btn btn-ghost btn-sm" onclick="refresh()" style="margin-left:0.75rem;">Refresh list</button></h3>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">All client accounts created on this same browser/site. Admin account is separate and not listed here.</p>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Plan</th>
+                <th>Balance</th>
+                <th>Pending</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable">
+              <tr><td colspan="10" style="text-align:center;color:var(--text-muted);">No users yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Activity Log -->
+      
+      <div class="dash-card" id="welcome">
+        <h3>Welcome email</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem;">This is sent to a client after they create an account. Use {{name}} for their name. Emails go out only after the host adds SMTP_HOST, SMTP_USER, and SMTP_PASS.</p>
+        <p id="mailReadyNote" style="font-size:0.85rem;margin-bottom:0.8rem;"></p>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="welcomeSubject">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="welcomeBody" rows="10"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="saveWelcomeBtn">Save welcome email</button>
+        <div id="welcomeMsg" style="margin-top:0.6rem;display:none;"></div>
+      </div>
+
+      <div class="dash-card" id="reports">
+        <h3>Add revenue report for a client</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem;">Example: report $106 generated. The client sees it on their dashboard. Tick the box to also add that amount to their available balance.</p>
+        <div class="form-group">
+          <label>Client</label>
+          <select id="reportUser"></select>
+        </div>
+        <div class="form-group">
+          <label>Amount (USD)</label>
+          <input type="number" id="reportAmount" min="1" step="0.01" placeholder="106">
+        </div>
+        <div class="form-group">
+          <label>Note</label>
+          <input type="text" id="reportNote" placeholder="Revenue generated $106">
+        </div>
+        <label style="display:flex;gap:0.5rem;align-items:center;margin:0.6rem 0 1rem;">
+          <input type="checkbox" id="reportAddBalance" checked>
+          Also add this amount to the client balance
+        </label>
+        <button type="button" class="btn btn-primary" id="saveReportBtn">Post report</button>
+        <div id="reportMsg" style="margin-top:0.6rem;display:none;"></div>
+      </div>
+
+      <div class="dash-card" id="wallet">
+        <h3>USDT on Tron wallet</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.8rem;">Paste your USDT on Tron (TRC20) address here. Clients will see it on the deposit page. Do not use Ethereum or BNB.</p>
+        <div class="form-group">
+          <label>USDT on Tron (TRC20) address</label>
+          <input type="text" id="adminWallet" placeholder="T................................">
+        </div>
+        <button type="button" class="btn btn-primary" id="saveWalletBtn">Save wallet address</button>
+        <div id="walletMsg" style="margin-top:0.6rem;display:none;"></div>
+      </div>
+
+      <div class="dash-card" id="activity">
+        <h3>Full Activity Log</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1rem;">Registrations, logins, deposits, payouts, and admin edits. Newest first.</p>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody id="activityTable">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-muted);">No activity yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (typeof initStorage === 'function') initStorage();
+      const session = requireAuth('admin');
+      if (!session || session.role !== 'admin') {
+        window.location.href = 'nm-admin-secure-login.html';
+        return;
+      }
+
+      async function refresh() {
+        const users = await getUsers();
+        const deposits = await getDeposits();
+        const withdrawals = await getWithdrawals();
+
+        document.getElementById('statUsers').textContent = users.length;
+        const reportUser = document.getElementById('reportUser');
+        if (reportUser) {
+          reportUser.innerHTML = users.length
+            ? users.map(u => `<option value="${u.id}">${u.fullName} — ${u.email}</option>`).join('')
+            : '<option value="">No clients yet</option>';
+        }
+        const pendingDep = deposits.filter(d => d.status === 'pending');
+        const pendingWd = withdrawals.filter(w => w.status === 'pending');
+        document.getElementById('statPendingDep').textContent = pendingDep.length;
+        document.getElementById('statPendingWd').textContent = pendingWd.length;
+        const approvedSum = deposits.filter(d => d.status === 'approved').reduce((s, d) => s + d.amount, 0);
+        document.getElementById('statTotalDep').textContent = formatCurrency(approvedSum);
+
+        // Pending deposits table
+        const depTbody = document.getElementById('depTable');
+        if (!pendingDep.length) {
+          depTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);">No pending deposits</td></tr>';
+        } else {
+          depTbody.innerHTML = pendingDep.map(d => {
+            const u = getUserById(d.userId);
+            return `
+              <tr>
+                <td>${formatDate(d.createdAt)}</td>
+                <td>${u ? u.fullName : d.userId}<br><small style="color:var(--text-muted)">${u ? u.email : ''}</small></td>
+                <td>${PLANS[d.planId]?.name || d.planId}</td>
+                <td>${formatCurrency(d.amount)}</td>
+                <td>${d.method}</td>
+                <td>${d.reference || '—'}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" onclick="doApproveDep('${d.id}')">Approve</button>
+                  <button class="btn btn-ghost btn-sm" onclick="doRejectDep('${d.id}')">Reject</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // Pending withdrawals
+        const wdTbody = document.getElementById('wdTable');
+        if (!pendingWd.length) {
+          wdTbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">No pending withdrawals</td></tr>';
+        } else {
+          wdTbody.innerHTML = pendingWd.map(w => {
+            const u = getUserById(w.userId);
+            return `
+              <tr>
+                <td>${formatDate(w.createdAt)}</td>
+                <td>${u ? u.fullName : w.userId}<br><small style="color:var(--text-muted)">${u ? u.email : ''}</small></td>
+                <td>${formatCurrency(w.amount)}</td>
+                <td>${w.method}</td>
+                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;">${w.details || '—'}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" onclick="doApproveWd('${w.id}')">Approve</button>
+                  <button class="btn btn-ghost btn-sm" onclick="doRejectWd('${w.id}')">Reject</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        // Users
+        const uTbody = document.getElementById('usersTable');
+        if (!users.length) {
+          uTbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--text-muted);">No client accounts yet. Register a new account on the main site (same browser), then refresh this page.</td></tr>';
+        } else {
+          uTbody.innerHTML = users.map(u => `
+            <tr>
+              <td>${u.fullName}</td>
+              <td>${u.email}</td>
+              <td>${u.username}</td>
+              <td>—</td>
+              <td>${u.plan ? (PLANS[u.plan]?.name || u.plan) : '—'}</td>
+              <td>${formatCurrency(u.balance || 0)}</td>
+              <td>${formatCurrency(u.pendingBalance || 0)}</td>
+              <td><span class="status-badge status-${u.status==='active'?'active':u.status==='suspended'?'rejected':'pending'}">${u.status || 'active'}</span></td>
+              <td>${formatDate(u.createdAt)}</td>
+              <td style="white-space:nowrap;">
+                <button class="btn btn-sm btn-ghost" onclick="editUser('${u.id}')">Edit</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        // Activity log
+        const aTbody = document.getElementById('activityTable');
+        if (aTbody && typeof getActivity === 'function') {
+          const acts = await getActivity();
+          if (!acts.length) {
+            aTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);">No activity yet</td></tr>';
+          } else {
+            aTbody.innerHTML = acts.slice(0, 80).map(a => `
+              <tr>
+                <td>${formatDate(a.createdAt)}</td>
+                <td><strong>${a.type}</strong></td>
+                <td>${a.detail || '—'}</td>
+              </tr>
+            `).join('');
+          }
+        }
+
+      }
+
+      
+      window.editUser = async function(userId) {
+        const users = await getUsers();
+        const u = users.find(x => x.id === userId);
+        if (!u) return;
+        const bal = prompt('Available Balance (USD):', u.balance || 0);
+        if (bal === null) return;
+        const pend = prompt('Pending Balance (USD):', u.pendingBalance || 0);
+        if (pend === null) return;
+        const plan = prompt('Plan (essential / foundation / growth / scale / professional / elite / or blank for none):', u.plan || '');
+        if (plan === null) return;
+        const status = prompt('Status (active / pending / suspended):', u.status || 'active');
+        if (status === null) return;
+
+        const updates = {
+          balance: parseFloat(bal) || 0,
+          pendingBalance: parseFloat(pend) || 0,
+          plan: plan.trim() ? plan.trim().toLowerCase() : null,
+          status: (status.trim() || 'active').toLowerCase()
+        };
+        if (typeof adminUpdateUser === 'function') {
+          await adminUpdateUser(userId, updates);
+        } else {
+          const idx = users.findIndex(x => x.id === userId);
+          users[idx] = { ...users[idx], ...updates };
+          saveUsers(users);
+        }
+        alert('User updated. Changes show on their dashboard immediately.');
+        await refresh();
+      };
+
+      window.editBalance = function(userId, current) {
+        editUser(userId);
+      };
+
+      window.doApproveDep = async function(id) {
+        if (confirm('Approve this deposit? Balance and plan will be updated for the user.')) {
+          await approveDeposit(id);
+          await refresh();
+        }
+      };
+      window.doRejectDep = async function(id) {
+        if (confirm('Reject this deposit?')) {
+          await rejectDeposit(id);
+          await refresh();
+        }
+      };
+      window.doApproveWd = async function(id) {
+        if (confirm('Approve this payout request?')) {
+          await approveWithdrawal(id);
+          await refresh();
+        }
+      };
+      window.doRejectWd = async function(id) {
+        if (confirm('Reject this payout? Funds will be returned to the user’s available balance.')) {
+          await rejectWithdrawal(id);
+          await refresh();
+        }
+      };
+
+      
+      const saveBtn = document.getElementById('saveWalletBtn');
+      if (saveBtn) {
+        fetch('/api/config').then(r => r.json()).then(cfg => {
+          if (cfg && cfg.usdtWallet) document.getElementById('adminWallet').value = cfg.usdtWallet;
+        }).catch(function(){});
+        saveBtn.addEventListener('click', async () => {
+          const wallet = document.getElementById('adminWallet').value.trim();
+          const msg = document.getElementById('walletMsg');
+          const res = await api('/api/admin/wallet', { method: 'POST', body: { usdtWallet: wallet } });
+          msg.style.display = 'block';
+          msg.textContent = res.success ? 'Wallet saved. Clients will see this address on the deposit page.' : (res.message || 'Could not save.');
+        });
+      }
+
+      const saveWelcomeBtn = document.getElementById('saveWelcomeBtn');
+      if (saveWelcomeBtn) {
+        api('/api/admin/welcome-email').then(cfg => {
+          if (!cfg || !cfg.success) return;
+          document.getElementById('welcomeSubject').value = cfg.subject || '';
+          document.getElementById('welcomeBody').value = cfg.body || '';
+          const note = document.getElementById('mailReadyNote');
+          if (note) note.textContent = cfg.mailReady
+            ? 'Mail is connected. New clients will receive this email.'
+            : 'Mail is not connected yet. Save the text now. After hosting adds SMTP, emails will send.';
+        }).catch(function(){});
+        saveWelcomeBtn.addEventListener('click', async () => {
+          const msg = document.getElementById('welcomeMsg');
+          const res = await api('/api/admin/welcome-email', {
+            method: 'POST',
+            body: {
+              subject: document.getElementById('welcomeSubject').value,
+              body: document.getElementById('welcomeBody').value
+            }
+          });
+          msg.style.display = 'block';
+          msg.textContent = res.success ? 'Welcome email saved.' : (res.message || 'Could not save.');
+        });
+      }
+
+      const saveReportBtn = document.getElementById('saveReportBtn');
+      if (saveReportBtn) {
+        saveReportBtn.addEventListener('click', async () => {
+          const msg = document.getElementById('reportMsg');
+          const res = await api('/api/admin/reports', {
+            method: 'POST',
+            body: {
+              userId: document.getElementById('reportUser').value,
+              amount: document.getElementById('reportAmount').value,
+              note: document.getElementById('reportNote').value || 'Revenue generated',
+              addToBalance: document.getElementById('reportAddBalance').checked
+            }
+          });
+          msg.style.display = 'block';
+          msg.textContent = res.success ? 'Report posted. The client can see it on their dashboard.' : (res.message || 'Could not post report.');
+          if (res.success) {
+            document.getElementById('reportAmount').value = '';
+            await refresh();
+          }
+        });
+      }
+
+      window.refresh = refresh;
+      await refresh();
+
+      function doLogout(e) {
+        if (e) e.preventDefault();
+        clearSession();
+        window.location.href = 'nm-admin-secure-login.html';
+      }
+      const logoutBtn = document.getElementById('logoutBtn');
+      const logoutBtnTop = document.getElementById('logoutBtnTop');
+      if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
+      if (logoutBtnTop) logoutBtnTop.addEventListener('click', doLogout);
+    });
+  </script>
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

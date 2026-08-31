@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit / Subscribe | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar" id="sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a href='/dashboard'><span class="nav-icon">▣</span> Overview</a></li>
+        <li><a class='active' href='/deposit'><span class="nav-icon">↓</span> Deposit / Subscribe</a></li>
+        <li><a href='/withdraw'><span class="nav-icon">↑</span> Request Payout</a></li>
+        <li><a href='/transactions'><span class="nav-icon">≡</span> Transactions</a></li>
+        <li><a href='/plans'><span class="nav-icon">★</span> Plans</a></li>
+        <li><a href="#" id="logoutBtn"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Deposit / Subscribe to Plan</h1>
+        <div class="dash-user">
+          <span id="userName">—</span>
+        </div>
+      </div>
+
+      <div class="dash-card" style="max-width:560px;">
+        <h3>Complete Your Subscription Deposit</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">Select a plan, choose a payment method, and submit your deposit. All deposits are manually reviewed and approved by our team.</p>
+        
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
+
+        <form id="depositForm">
+          <div class="form-group">
+            <label for="plan">Select Plan</label>
+            <select id="plan" name="plan" required>
+              <option value="">Choose a plan...</option>
+              <option value="essential">Essential Launch — $500</option>
+              <option value="foundation">Foundation — $2,000</option>
+              <option value="growth">Growth — $5,000</option>
+              <option value="scale">Scale — $10,000</option>
+              <option value="professional">Professional — $15,000</option>
+              <option value="elite">Elite — $40,000 (mid-range)</option>
+            </select>
+          </div>
+
+          <div class="amount-display" id="amountDisplay">$0.00</div>
+
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="method-cards" id="methodCards">
+              <div class="method-card selected" data-method="USDT">USDT on Tron (TRC20)</div>
+            </div>
+            <input type="hidden" id="method" name="method" value="USDT" required>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem;">Send <strong>USDT on Tron only</strong> (TRC20). Do not send USDT on Ethereum, BNB, Solana, or any other network.</p>
+            <div id="walletBox" style="margin-top:0.9rem;padding:0.9rem 1rem;border:1px solid rgba(212,175,55,0.35);border-radius:10px;background:rgba(212,175,55,0.06);">
+              <div style="font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;margin-bottom:0.35rem;">Send USDT on Tron (TRC20) to this address</div>
+              <div id="usdtWallet" style="font-family:ui-monospace,Menlo,monospace;font-size:0.95rem;word-break:break-all;color:var(--text);min-height:1.4em;border-bottom:1px dashed rgba(212,175,55,0.45);padding-bottom:0.35rem;">Address will be added here</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.45rem;">Network: Tron · TRC20 · USDT. Address starts with T.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reference">USDT Transaction ID / TX Hash</label>
+            <input type="text" id="reference" name="reference" placeholder="Paste your USDT transaction hash (TXID)" required>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="2" placeholder="Any additional details..."></textarea>
+          </div>
+
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1.25rem;">After submitting, your deposit will show as <strong>Pending</strong> until our team verifies and approves it. You will then see the updated balance and active plan in your dashboard.</p>
+
+          <button type="submit" class="btn btn-primary btn-block">Submit Deposit for Approval</button>
+        </form>
+      </div>
+
+      <div class="dash-card">
+        <h3>Your Pending Deposits</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Plan</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="pendingTable">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No deposits yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = requireAuth();
+      if (!session) return;
+      if (session.role === 'admin') { window.location.href = 'admin.html'; return; }
+
+      document.getElementById('userName').textContent = session.fullName;
+      fetch('/api/config').then(r => r.json()).then(cfg => {
+        const el = document.getElementById('usdtWallet');
+        if (cfg && cfg.usdtWallet) el.textContent = cfg.usdtWallet;
+        else el.textContent = 'Address will be added here';
+      }).catch(() => {
+        document.getElementById('usdtWallet').textContent = 'Address will be added here';
+      });
+
+      // Preselect plan
+      const params = new URLSearchParams(window.location.search);
+      const prePlan = params.get('plan');
+      if (prePlan && PLANS[prePlan]) {
+        document.getElementById('plan').value = prePlan;
+        updateAmount();
+      }
+
+      document.getElementById('plan').addEventListener('change', updateAmount);
+
+      function updateAmount() {
+        const planId = document.getElementById('plan').value;
+        const amount = planId && PLANS[planId] ? PLANS[planId].price : 0;
+        document.getElementById('amountDisplay').textContent = formatCurrency(amount);
+      }
+
+      // Method selection
+      document.querySelectorAll('.method-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          document.getElementById('method').value = card.dataset.method;
+        });
+      });
+
+      // Load pending
+      async function loadPending() {
+        const deps = (await getDeposits()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const tbody = document.getElementById('pendingTable');
+        if (!deps.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No deposits yet</td></tr>';
+          return;
+        }
+        tbody.innerHTML = deps.map(d => `
+          <tr>
+            <td>${formatDate(d.createdAt)}</td>
+            <td>${PLANS[d.planId]?.name || d.planId}</td>
+            <td>${formatCurrency(d.amount)}</td>
+            <td>${d.method}</td>
+            <td><span class="status-badge status-${d.status}">${d.status}</span></td>
+          </tr>
+        `).join('');
+      }
+      await loadPending();
+
+      document.getElementById('depositForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const planId = document.getElementById('plan').value;
+        const method = document.getElementById('method').value;
+        const err = document.getElementById('errorMsg');
+        const success = document.getElementById('successMsg');
+        err.style.display = 'none';
+        success.style.display = 'none';
+
+        if (!planId || !PLANS[planId]) {
+          err.textContent = 'Please select a plan.';
+          err.style.display = 'block';
+          return;
+        }
+        if (!method) {
+          err.textContent = 'Please select a payment method.';
+          err.style.display = 'block';
+          return;
+        }
+
+        const amount = PLANS[planId].price;
+        const ref = document.getElementById('reference').value;
+        const result = await submitDeposit(session.id, amount, planId, method, ref);
+        if (!result.success) {
+          err.textContent = result.message || 'Could not submit deposit.';
+          err.style.display = 'block';
+          return;
+        }
+        success.textContent = 'Deposit submitted successfully. It is now pending manual approval by our team.';
+        success.style.display = 'block';
+        e.target.reset();
+        document.getElementById('amountDisplay').textContent = '$0.00';
+        document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+        await loadPending();
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSession();
+        window.location.href = 'login.html';
+      });
+    });
+  </script>
+
+  <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

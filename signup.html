@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card" style="max-width:460px;">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="40">
+      </a>
+      <h1>Create Your Account</h1>
+      <p class="subtitle">Start your managed business operation</p>
+      
+      <div id="errorMsg" class="error-msg"></div>
+      <div id="planNotice" class="success-msg" style="display:none;"></div>
+      
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" required placeholder="John Smith" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required placeholder="johnsmith" autocomplete="username" pattern="[a-zA-Z0-9_]{3,20}" title="3-20 characters, letters, numbers, underscore">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="At least 6 characters" minlength="6" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password" minlength="6" autocomplete="new-password">
+        </div>
+        <input type="hidden" id="selectedPlan" name="plan" value="">
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+      
+      <div class="auth-links">
+        Already have an account? <a href='/login'>Log in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initStorage === 'function') initStorage();
+      const session = getSession();
+      if (session) {
+        window.location.href = session.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        return;
+      }
+
+      // Pre-select plan from URL
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan');
+      if (plan && PLANS[plan]) {
+        document.getElementById('selectedPlan').value = plan;
+        const notice = document.getElementById('planNotice');
+        notice.textContent = `You selected the ${PLANS[plan].name} plan (${formatCurrency(PLANS[plan].price)}). After creating your account you can complete your deposit.`;
+        notice.style.display = 'block';
+      }
+
+      document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = {
+          fullName: document.getElementById('fullName').value,
+          username: document.getElementById('username').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+          confirmPassword: document.getElementById('confirmPassword').value
+        };
+        const err = document.getElementById('errorMsg');
+        const result = await handleSignup(formData);
+        if (result.success) {
+          const planId = document.getElementById('selectedPlan').value;
+          if (planId) {
+            window.location.href = `deposit.html?plan=${planId}`;
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        } else {
+          err.textContent = result.message || 'Sign up failed.';
+          err.style.display = 'block';
+        }
+      });
+    });
+  </script>
+
+  <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

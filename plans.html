@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plans | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a href='/dashboard'><span class="nav-icon">▣</span> Overview</a></li>
+        <li><a href='/deposit'><span class="nav-icon">↓</span> Deposit / Subscribe</a></li>
+        <li><a href='/withdraw'><span class="nav-icon">↑</span> Request Payout</a></li>
+        <li><a href='/transactions'><span class="nav-icon">≡</span> Transactions</a></li>
+        <li><a class='active' href='/plans'><span class="nav-icon">★</span> Plans</a></li>
+        <li><a href="#" id="logoutBtn"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Choose Your Plan</h1>
+        <div class="dash-user"><span id="userName">—</span></div>
+      </div>
+      <div class="plans-grid">
+        <div class="plan-card">
+          <h3 class="plan-name">Essential Launch</h3>
+          <div class="plan-price">$500</div>
+          <p class="plan-desc">A practical starting operation covering the core business and digital essentials required to begin.</p>
+          <a class='btn btn-outline btn-block' href='/deposit?plan=essential'>Subscribe — Essential</a>
+        </div>
+        <div class="plan-card">
+          <h3 class="plan-name">Foundation</h3>
+          <div class="plan-price">$2,000</div>
+          <p class="plan-desc">Essential managed online business foundation.</p>
+          <a class='btn btn-outline btn-block' href='/deposit?plan=foundation'>Subscribe</a>
+        </div>
+        <div class="plan-card featured">
+          <h3 class="plan-name">Growth</h3>
+          <div class="plan-price">$5,000</div>
+          <p class="plan-desc">Expanded infrastructure, marketing & management.</p>
+          <a class='btn btn-primary btn-block' href='/deposit?plan=growth'>Subscribe</a>
+        </div>
+        <div class="plan-card">
+          <h3 class="plan-name">Scale</h3>
+          <div class="plan-price">$10,000</div>
+          <p class="plan-desc">Comprehensive development & multiple acquisition systems.</p>
+          <a class='btn btn-outline btn-block' href='/deposit?plan=scale'>Subscribe</a>
+        </div>
+        <div class="plan-card">
+          <h3 class="plan-name">Professional</h3>
+          <div class="plan-price">$15,000</div>
+          <p class="plan-desc">High-capacity operation with strategic management.</p>
+          <a class='btn btn-outline btn-block' href='/deposit?plan=professional'>Subscribe</a>
+        </div>
+        <div class="plan-card">
+          <h3 class="plan-name">Elite</h3>
+          <div class="plan-price">$30k–$50k</div>
+          <p class="plan-desc">Highest level, individually scoped operation.</p>
+          <a class='btn btn-outline btn-block' href='/deposit?plan=elite'>Apply / Subscribe</a>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const session = requireAuth();
+      if (!session) return;
+      if (session.role === 'admin') { window.location.href = 'admin.html'; return; }
+      document.getElementById('userName').textContent = session.fullName;
+      document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); clearSession(); window.location.href = 'login.html'; });
+    });
+  </script>
+
+  <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

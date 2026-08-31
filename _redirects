@@ -1,0 +1,14 @@
+/login               /login.html               200
+/signup              /signup.html              200
+/forgot-password     /forgot-password.html     200
+/dashboard           /dashboard.html           200
+/deposit             /deposit.html             200
+/withdraw            /withdraw.html            200
+/transactions        /transactions.html        200
+/plans               /plans.html               200
+/admin               /admin.html               200
+/nm-admin-secure-login /nm-admin-secure-login.html 200
+/privacy             /privacy.html             200
+/terms               /terms.html               200
+/refund              /refund.html              200
+/payout-terms        /payout-terms.html        200

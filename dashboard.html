@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=67b9698d-773c-460b-872c-baa3f4e6be72
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=67b9698d-773c-460b-872c-baa3f4e6be72">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Nova Momentum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar" id="sidebar">
+      <a class='logo-link' href='/'>
+        <img src="images/logo.svg" alt="Nova Momentum" height="36">
+      </a>
+      <ul class="dash-nav">
+        <li><a class='active' href='/dashboard'><span class="nav-icon">▣</span> Overview</a></li>
+        <li><a href='/deposit'><span class="nav-icon">↓</span> Deposit / Subscribe</a></li>
+        <li><a href='/withdraw'><span class="nav-icon">↑</span> Request Payout</a></li>
+        <li><a href='/transactions'><span class="nav-icon">≡</span> Transactions</a></li>
+        <li><a href='/plans'><span class="nav-icon">★</span> Plans</a></li>
+        <li><a href="#" id="logoutBtn"><span class="nav-icon">⎋</span> Log Out</a></li>
+      </ul>
+    </aside>
+    
+        <main class="dash-main">
+      <div class="dash-header">
+        <div>
+          <button class="btn btn-ghost btn-sm mobile-toggle" style="display:none;margin-bottom:0.5rem;" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+          <p style="font-size:0.75rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin:0 0 0.35rem;">Your Business. One Place.</p>
+          <h1>Your Dashboard Gives You the View</h1>
+          <p style="color:var(--text-secondary);font-size:0.95rem;max-width:520px;margin-top:0.5rem;">You shouldn’t have to navigate multiple systems just to understand your account. Nova Momentum brings the important information together in one dashboard.</p>
+        </div>
+        <div class="dash-user">
+          <span id="userName">—</span>
+          <a class='btn btn-ghost btn-sm' href='/'>Home</a>
+        </div>
+      </div>
+
+      <div class="dash-card" id="welcomeBanner" style="margin-bottom:1.25rem;border-color:rgba(212,175,55,0.35);">
+        <h3 id="welcomeTitle">Welcome</h3>
+        <p id="welcomeText" style="color:var(--text-secondary);margin:0.4rem 0 0;">Your account is ready. Choose a plan when you are ready to begin.</p>
+      </div>
+
+      <div class="dash-card" style="margin-bottom:1.25rem;">
+        <h3 style="margin-bottom:1rem;">Account Overview</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Available Balance</div>
+            <div class="value gold" id="availableBalance">$0.00</div>
+            <div class="sub">Ready for eligible payouts</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Pending Balance</div>
+            <div class="value" id="pendingBalance">$0.00</div>
+            <div class="sub">In process</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Account Status</div>
+            <div class="value" style="font-size:1.1rem;">
+              <div>Plan: <span id="currentPlan">None</span></div>
+              <div style="margin-top:0.35rem;">Status: <span class="status-badge status-active" id="accountStatus">Active</span></div>
+            </div>
+            <div class="sub" id="planStatus">No active plan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card" style="margin-bottom:1.25rem;">
+        <h3>Payout</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.5rem 0 1rem;">Available to Withdraw</p>
+        <div class="value gold" id="payoutAvailable" style="font-size:1.75rem;margin-bottom:1rem;">$0.00</div>
+        <a class='btn btn-primary' href='/withdraw'>Request Payout</a>
+      </div>
+
+      <div class="dash-card" style="margin-bottom:1.25rem;">
+        <h3>Operation Reports</h3>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin:0.4rem 0 1rem;">Revenue and updates posted by the Nova Momentum team.</p>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Note</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTable">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-muted);">No reports yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <h3>Recent Activity</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="activityTable">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No activity yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <h3>Quick Actions</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+          <a class='btn btn-primary' href='/deposit'>Make a Deposit</a>
+          <a class='btn btn-outline' href='/withdraw'>Request Payout</a>
+          <a class='btn btn-ghost' href='/plans'>View Plans</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const session = requireAuth();
+      if (!session) return;
+      if (session.role === 'admin') {
+        window.location.href = 'admin.html';
+        return;
+      }
+
+      const user = (await getMe()) || session;
+      document.getElementById('userName').textContent = user.fullName || session.fullName;
+      const first = (user.fullName || session.fullName || 'there').split(' ')[0];
+      const wt = document.getElementById('welcomeTitle');
+      const wx = document.getElementById('welcomeText');
+      if (wt) wt.textContent = 'Welcome back, ' + first;
+      if (wx) wx.textContent = 'Your dashboard is ready. Check your balance, reports, and plan from here.';
+      document.getElementById('availableBalance').textContent = formatCurrency(user.balance || 0);
+      document.getElementById('pendingBalance').textContent = formatCurrency(user.pendingBalance || 0);
+      const pa = document.getElementById('payoutAvailable');
+      if (pa) pa.textContent = formatCurrency(user.balance || 0);
+      
+      const planId = user.plan || session.plan;
+      if (planId && PLANS[planId]) {
+        document.getElementById('currentPlan').textContent = PLANS[planId].name;
+        document.getElementById('planStatus').textContent = 'Active';
+      } else {
+        document.getElementById('currentPlan').textContent = 'None';
+        document.getElementById('planStatus').textContent = 'Subscribe to a plan to get started';
+      }
+
+      if (user.createdAt) {
+        document.getElementById('memberSince').textContent = formatDate(user.createdAt);
+      }
+
+      // Activity from deposits, withdrawals, txs
+      try {
+        const reportRes = await api('/api/reports');
+        const reports = (reportRes && reportRes.reports) || [];
+        const rBody = document.getElementById('reportsTable');
+        if (rBody) {
+          if (!reports.length) {
+            rBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);">No reports yet</td></tr>';
+          } else {
+            rBody.innerHTML = reports.map(r => `
+              <tr>
+                <td>${formatDate(r.createdAt)}</td>
+                <td>${r.note || 'Revenue generated'}</td>
+                <td style="color:var(--gold);">+${formatCurrency(r.amount || 0)}</td>
+              </tr>
+            `).join('');
+          }
+        }
+      } catch (e) {}
+
+      const deposits = await getDeposits();
+      const withdrawals = await getWithdrawals();
+      const txs = await getTransactions();
+      
+      let activities = [];
+      deposits.forEach(d => activities.push({
+        date: d.createdAt,
+        type: 'Deposit',
+        desc: `Plan: ${PLANS[d.planId]?.name || d.planId} via ${d.method}`,
+        amount: d.amount,
+        status: d.status
+      }));
+      withdrawals.forEach(w => activities.push({
+        date: w.createdAt,
+        type: 'Payout',
+        desc: `Via ${w.method}`,
+        amount: -w.amount,
+        status: w.status
+      }));
+      activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+      activities = activities.slice(0, 10);
+
+      const tbody = document.getElementById('activityTable');
+      if (activities.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No activity yet. Subscribe to a plan to begin.</td></tr>';
+      } else {
+        tbody.innerHTML = activities.map(a => `
+          <tr>
+            <td>${formatDate(a.date)}</td>
+            <td>${a.type}</td>
+            <td>${a.desc}</td>
+            <td style="color:${a.amount >= 0 ? 'var(--gold)' : 'var(--text-secondary)'}">${a.amount >= 0 ? '+' : ''}${formatCurrency(a.amount)}</td>
+            <td><span class="status-badge status-${a.status}">${a.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        clearSession();
+        window.location.href = 'login.html';
+      });
+
+      // Mobile sidebar
+      if (window.innerWidth <= 992) {
+        document.querySelector('.mobile-toggle').style.display = 'inline-flex';
+      }
+    });
+  </script>
+
+  <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="a9fffeb4-d773-4164-b254-d6bd5fe1a3ee" data-app-host="app.netlify.com"></script>

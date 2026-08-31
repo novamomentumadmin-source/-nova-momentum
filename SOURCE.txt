@@ -1,0 +1,2 @@
+SOURCE NOTE
+Pulled from https://magical-flan-bd8177.netlify.app/ on 2026-08-29. This is the live version you asked to keep as the master copy.
