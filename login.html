@@ -33,7 +33,10 @@
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password">
+         <div style="position:relative;">
+  <input type="password" id="password" name="password" required placeholder="••••••••" autocomplete="current-password" style="width:100%;padding-right:2.6rem;">
+  <button type="button" id="eyeBtn" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#c9a227;font-size:0.85rem;">Show</button>
+</div>
         </div>
         <div style="text-align:right;margin-bottom:1.25rem;">
           <a href='/forgot-password' style='font-size:0.85rem;'>Forgot password?</a>
@@ -72,7 +75,13 @@
       });
     });
   </script>
-
+<script>
+document.getElementById('eyeBtn').onclick = function() {
+  var p = document.getElementById('password');
+  if (p.type === 'password') { p.type = 'text'; this.textContent = 'Hide'; }
+  else { p.type = 'password'; this.textContent = 'Show'; }
+};
+</script>
   <!-- TAWK.TO LIVE CHAT: paste your official Tawk.to script here after hosting -->
 </body>
 </html>
