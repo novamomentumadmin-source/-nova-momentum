@@ -69,11 +69,11 @@
           <div class="method-card" data-method="USDC">USDC on Base</div>
             </div>
             <input type="hidden" id="method" name="method" value="USDT" required>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem;">Send <strong>USDT on Tron only</strong> (TRC20). Do not send USDT on Ethereum, BNB, Solana, or any other network.</p>
+            <p  id="payNote" style="font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem;">Send <strong>USDT on Tron only</strong> (TRC20). Do not send USDT on Ethereum, BNB, Solana, or any other network.</p>
             <div id="walletBox" style="margin-top:0.9rem;padding:0.9rem 1rem;border:1px solid rgba(212,175,55,0.35);border-radius:10px;background:rgba(212,175,55,0.06);">
-              <div style="font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;margin-bottom:0.35rem;">Send USDT on Tron (TRC20) to this address</div>
+              <div id="walletTitle" style="font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;margin-bottom:0.35rem;">Send USDT on Tron (TRC20) to this address</div>
               <div id="usdtWallet" style="font-family:ui-monospace,Menlo,monospace;font-size:0.95rem;word-break:break-all;color:var(--text);min-height:1.4em;border-bottom:1px dashed rgba(212,175,55,0.45);padding-bottom:0.35rem;">Address will be added here</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.45rem;">Network: Tron · TRC20 · USDT. Address starts with T.</div>
+              <div id="walletHint" style="font-size:0.75rem;color:var(--text-muted);margin-top:0.45rem;">Network: Tron · TRC20 · USDT. Address starts with T.</div>
             </div>
           </div>
 
