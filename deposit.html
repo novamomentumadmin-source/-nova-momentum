@@ -123,13 +123,28 @@
       if (session.role === 'admin') { window.location.href = 'admin.html'; return; }
 
       document.getElementById('userName').textContent = session.fullName;
-      fetch('/api/config').then(r => r.json()).then(cfg => {
-        const el = document.getElementById('usdtWallet');
-        if (cfg && cfg.usdtWallet) el.textContent = cfg.usdtWallet;
-        else el.textContent = 'Address will be added here';
-      }).catch(() => {
-        document.getElementById('usdtWallet').textContent = 'Address will be added here';
-      });
+     let usdtAddr = '';
+let usdcAddr = '0x755Fe996fC13B48B5f186DA280609F55D4db9f80';
+fetch('/api/config').then(r => r.json()).then(cfg => {
+  if (cfg && cfg.usdtWallet) usdtAddr = cfg.usdtWallet;
+  if (cfg && cfg.usdcWallet) usdcAddr = cfg.usdcWallet;
+  showPay('USDT');
+}).catch(() => showPay('USDT'));
+
+function showPay(m) {
+  const box = document.getElementById('usdtWallet');
+  if (m === 'USDC') {
+    document.getElementById('payNote').innerHTML = 'Send <strong>USDC on Base only</strong>. Do not send on Ethereum or Solana.';
+    document.getElementById('walletTitle').textContent = 'Send USDC on Base to this address';
+    box.textContent = usdcAddr;
+    document.getElementById('walletHint').textContent = 'Network: Base · USDC. Address starts with 0x.';
+  } else {
+    document.getElementById('payNote').innerHTML = 'Send <strong>USDT on Tron only</strong> (TRC20).';
+    document.getElementById('walletTitle').textContent = 'Send USDT on Tron (TRC20) to this address';
+    box.textContent = usdtAddr || 'Address will be added here';
+    document.getElementById('walletHint').textContent = 'Network: Tron · TRC20 · USDT. Address starts with T.';
+  }
+}
 
       // Preselect plan
       const params = new URLSearchParams(window.location.search);
@@ -153,6 +168,7 @@
           document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
           card.classList.add('selected');
           document.getElementById('method').value = card.dataset.method;
+          showPay(card.dataset.method);
         });
       });
 
