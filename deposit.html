@@ -172,7 +172,12 @@ function showPay(m) {
           showPay(card.dataset.method);
         });
       });
-
+document.getElementById('copyAddr').onclick = function() {
+  var t = document.getElementById('usdtWallet').textContent;
+  navigator.clipboard.writeText(t);
+  this.textContent = 'Copied';
+  setTimeout(() => { this.textContent = 'Copy address'; }, 1500);
+};
       // Load pending
       async function loadPending() {
         const deps = (await getDeposits()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
