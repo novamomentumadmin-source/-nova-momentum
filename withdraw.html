@@ -60,10 +60,11 @@
             <label for="method">Payout Method</label>
             <select id="method" name="method" required>
               <option value="USDT" selected>USDT (Tether)</option>
+              <option value="USDC">USDC on Base</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="details">Your USDT Wallet Address</label>
+            <label for="details">Your payout wallet address</label>
             <textarea id="details" name="details" required rows="3" placeholder="Paste your USDT (TRC20 or ERC20) wallet address"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-block">Submit Payout Request</button>
