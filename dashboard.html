@@ -34,7 +34,7 @@
         <main class="dash-main">
       <div class="dash-header">
         <div>
-          <button class="btn btn-ghost btn-sm mobile-toggle" style="display:none;margin-bottom:0.5rem;" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+          <button class="btn btn-ghost btn-sm mobile-toggle" style="display:inline-flex;margin-bottom:0.5rem;" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
           <p style="font-size:0.75rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin:0 0 0.35rem;">Your Business. One Place.</p>
           <h1>Your Dashboard Gives You the View</h1>
           <p style="color:var(--text-secondary);font-size:0.95rem;max-width:520px;margin-top:0.5rem;">You shouldn’t have to navigate multiple systems just to understand your account. Nova Momentum brings the important information together in one dashboard.</p>
@@ -162,9 +162,9 @@
         document.getElementById('planStatus').textContent = 'Subscribe to a plan to get started';
       }
 
-      if (user.createdAt) {
-        document.getElementById('memberSince').textContent = formatDate(user.createdAt);
-      }
+      
+    
+      
 
       // Activity from deposits, withdrawals, txs
       try {
