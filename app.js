@@ -9,6 +9,7 @@ const ADMIN = {
 };
 
 const PLANS = {
+  launch: { name: 'Launch Starter', price: 100, id: 'launch' },
   essential: { name: 'Essential Launch', price: 500, id: 'essential' },
   foundation: { name: 'Foundation', price: 2000, id: 'foundation' },
   growth: { name: 'Growth', price: 5000, id: 'growth' },
